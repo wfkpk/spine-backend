@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Book {
+  id            String  @id @default(uuid())
+  title         String
+  description   String?
+  imageUrl      String
+  bookUrl       String
+  bookTitleBare String
+  numPages      Int
+  avgRating     String
+  ratingsCount  Int
+  kcrPreviewUrl String?
+  goodReadsId   String  @unique
+
+  author   Author    @relation(fields: [authorId], references: [id])
+  authorId Int
+  comment  Comment[]
+  Record   Record[]
+  Notes    Notes[]
+}
+
+model Author {
+  id          Int    @id @default(autoincrement())
+  goodReadsId String @unique
+  name        String
+  profileUrl  String
+  books       Book[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  book   Book   @relation(fields: [bookId], references: [id])
+  bookId String
+}
+
+model Record {
+  id        String           @id @default(uuid())
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  status    BookRecordStatus @default(WANT_TO_READ)
+  progress  Int
+  review    String?
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  book   Book   @relation(fields: [bookId], references: [id])
+  bookId String
+}
+
+model Notes {
+  id        String   @id @default(uuid())
+  notes     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  book      Book     @relation(fields: [bookId], references: [id])
+  bookId    String
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String   @default("Spine User")
+  email        String?  @unique
+  username     String   @unique @default(cuid())
+  firebaseUid  String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  mailVerified Boolean?
+  bio          String?
+  userRole     UserRole @default(USER)
+  avatar       String?  @default("https://i.imgur.com/6VBx3io.png")
+
+  comment Comment[]
+  Record  Record[]
+  Notes   Notes[]
+}
+
+// model BookSuggest{
+//   id            String  @id @default(uuid())
+//   title         String
+//   description   String?
+//   imageUrl      String
+//   bookUrl       String
+//   numPages      Int
+//   kcrPreviewUrl String?
+//   bookId        String  @unique
+// }
+// model AuthorSuggest{
+//   id           Int @id @default(autoincrement())
+//   name         String
+//   profileUrl   String
+//   worksListUrl String
+// }
+
+enum BookRecordStatus {
+  READ
+  CURRENTLY_READING
+  WANT_TO_READ
+}
+
+enum UserRole {
+  ADMIN
+  MOD
+  USER
+}
