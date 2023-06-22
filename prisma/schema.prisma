@@ -52,8 +52,8 @@ model Record {
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
   status    BookRecordStatus @default(WANT_TO_READ)
-  progress  Int
-  review    String?
+  progress  Int              @default(0)
+  rating    Int?
 
   user   User   @relation(fields: [userId], references: [id])
   userId String

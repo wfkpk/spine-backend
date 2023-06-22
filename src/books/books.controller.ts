@@ -10,15 +10,27 @@ import {
   UseGuards,
   Query,
   Delete,
+  Patch,
 } from '@nestjs/common';
 import { Response } from 'src/interface/response';
 import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { FirebaseAuthGuard } from 'src/auth/firebase-auth.guard';
 import { UserAuthGuard } from 'src/auth/auth.guard';
+import { CreateStatusDto } from './dto/create-status.dto';
 
 @Controller()
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
+
+  @Get('books/:id')
+  @ApiOperation({ summary: 'Get Book by Id' })
+  @ApiResponse({ status: 200, description: 'Get book successful.' })
+  async getBookById(@Param('id') bookId: string): Promise<Response> {
+    const book = await this.booksService.getBookById(bookId);
+    return {
+      data: book,
+    };
+  }
 
   @Get('books/current')
   @ApiOperation({ summary: 'Get Current Reading List of all books' })
@@ -55,11 +67,54 @@ export class BooksController {
     };
   }
 
-  @Get('books/:id')
-  @ApiOperation({ summary: 'Get Book by Id' })
-  @ApiResponse({ status: 200, description: 'Get book successful.' })
-  async getBookById(@Param('id') bookId: string): Promise<Response> {
-    const book = await this.booksService.getBookById(bookId);
+  @Patch('books/:id/record/update')
+  @ApiOperation({ summary: 'Update Status of the Book' })
+  @ApiResponse({ status: 200, description: 'Update status successful.' })
+  async updateStatus(
+    @Param('id') bookId: string,
+    @Request() req: any,
+    createStatusDto: CreateStatusDto,
+  ): Promise<Response> {
+    const userId = req.headers['userId'];
+    const status = await this.booksService.updateStatus(
+      bookId,
+      userId,
+      createStatusDto,
+    );
+    return {
+      data: status,
+    };
+  }
+
+  @Post('books/:id/record/add')
+  @ApiOperation({ summary: 'Add Book to my record' })
+  @ApiResponse({ status: 200, description: 'Add book successful.' })
+  async addBookToMyRecord(
+    @Param('id') bookId: string,
+    @Request() req: any,
+    createStatusDto: CreateStatusDto,
+  ): Promise<Response> {
+    const userId = req.headers['userId'];
+    const book = await this.booksService.addBookToMyRecord(
+      bookId,
+      userId,
+      createStatusDto,
+    );
+    return {
+      data: book,
+    };
+  }
+
+  @UseGuards(FirebaseAuthGuard, UserAuthGuard)
+  @Delete('books/:id/record/delete')
+  @ApiOperation({ summary: 'Delete Book from my record' })
+  @ApiResponse({ status: 200, description: 'Delete book successful.' })
+  async deleteBookFromMyRecord(
+    @Param('id') bookId: string,
+    @Request() req: any,
+  ): Promise<Response> {
+    const userId = req.headers['userId'];
+    const book = await this.booksService.deleteBookFromMyRecord(bookId, userId);
     return {
       data: book,
     };

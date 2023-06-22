@@ -2,6 +2,7 @@ import { CreateNotesDto } from './dto/create-notes.dto';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { CreateStatusDto } from './dto/create-status.dto';
 
 @Injectable()
 export class BooksService {
@@ -221,5 +222,115 @@ export class BooksService {
       },
     });
     return comment;
+  }
+  // async addBookToWantToReadList(
+  //   bookId: string,
+  //   userId: string,
+  // ) {
+  //   const bookCheck = await this.prisma.record.findFirst({
+  //     where: {
+  //       bookId: bookId,
+  //       userId: userId,
+  //     },
+  //   });
+  //   if (bookCheck) {
+  //     throw new BadRequestException('Book already exists');
+  //   }
+  //   const book = await this.prisma.record.create({
+  //     data: {
+  //       book: {
+  //         connect: {
+  //           id: bookId,
+  //         },
+  //       },
+  //       user: {
+  //         connect: {
+  //           id: userId,
+  //         },
+  //       },
+  //       status: 'WANT_TO_READ',
+  //     },
+  //   });
+  //   return book;
+  // }
+
+  async updateStatus(
+    bookId: string,
+    userId: string,
+    updateStatusDto: CreateStatusDto,
+  ) {
+    const bookCheck = await this.prisma.record.findFirst({
+      where: {
+        bookId: bookId,
+        userId: userId,
+      },
+    });
+    if (!bookCheck) {
+      throw new BadRequestException('Book not found');
+    }
+    const book = await this.prisma.record.update({
+      where: {
+        id: bookCheck.id,
+      },
+      data: {
+        progress: updateStatusDto.progress,
+        rating: updateStatusDto.rating,
+        status: updateStatusDto.status,
+      },
+    });
+    return book;
+  }
+
+  async deleteBookFromMyRecord(bookId: string, userId: string) {
+    const bookCheck = await this.prisma.record.findFirst({
+      where: {
+        bookId: bookId,
+        userId: userId,
+      },
+    });
+    if (!bookCheck) {
+      throw new BadRequestException('Book not found');
+    }
+    const book = await this.prisma.record.delete({
+      where: {
+        id: bookCheck.id,
+      },
+    });
+    return book;
+  }
+
+  async addBookToMyRecord(
+    bookId: string,
+    userId: string,
+    createStatusDto: CreateStatusDto,
+  ) {
+    const bookCheck = await this.prisma.record.findFirst({
+      where: {
+        bookId: bookId,
+        userId: userId,
+      },
+    });
+    if (bookCheck) {
+      throw new BadRequestException('Book already exists');
+    }
+
+    const book = await this.prisma.record.create({
+      data: {
+        book: {
+          connect: {
+            id: bookId,
+          },
+        },
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        status: createStatusDto.status,
+        progress: createStatusDto.progress,
+        rating: createStatusDto.rating,
+      },
+    });
+    return book;
   }
 }
