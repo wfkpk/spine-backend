@@ -108,20 +108,20 @@ export class SearchService {
           avgRating: bookData.avgRating,
           ratingsCount: bookData.ratingsCount,
           kcrPreviewUrl: bookData.kcrPreviewUrl || null,
-          author: {
-            connectOrCreate: {
-              where: { id: bookData.author.id },
-              create: {
-                goodReadsId: bookData.author.id,
-                name: bookData.author.name,
-                isGoodreadsAuthor: bookData.author.isGoodreadsAuthor,
-                profileUrl: bookData.author.profileUrl,
-              },
-            },
-          },
+          // author: {
+          //   connectOrCreate: {
+          //     where: { id: bookData.author.id },
+          //     create: {
+          //       goodReadsId: bookData.author.id,
+          //       name: bookData.author.name,
+          //       isGoodreadsAuthor: bookData.author.isGoodreadsAuthor,
+          //       profileUrl: bookData.author.profileUrl,
+          //     },
+          //   },
+          // },
         };
       });
-      console.log(books.author.goodReadsId);
+
       //   await this.prisma.book.createMany({
       //     data: books,
       //     skipDuplicates: true,
