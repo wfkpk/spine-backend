@@ -6,7 +6,7 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-  <p align="center">Application-<a href="http://wfkpk.vercel.app" target="_blank">Spines</a> Backend for tracking books </p>
+  <p align="center">Application-<a href="http://wfkpk.vercel.app/blog/spine-blog" target="_blank">Spines</a> Backend for tracking books </p>
     <p align="center">
       
 
@@ -27,7 +27,10 @@ feature list:-
 I am using postgresql database and will do rate limiting with redis and firebase for authentication.
 Now Spine is opensource enjoy the backend codebase you might learn while reviwing the code.
 
-`feel free add PR and issues if you find any`
+feel free add PR and issues if you find any
+
+### Swagger API endpoint preview
+![image](https://github.com/wfkpk/spine-backend/assets/89706786/87da94a9-a959-4ed2-9519-d8a799bd456f)
 
 ## Installation
 
