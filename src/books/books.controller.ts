@@ -22,6 +22,7 @@ import { CreateStatusDto } from './dto/create-status.dto';
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
+  @UseGuards(FirebaseAuthGuard, UserAuthGuard)
   @Get('books/:id')
   @ApiOperation({ summary: 'Get Book by Id' })
   @ApiResponse({ status: 200, description: 'Get book successful.' })
@@ -32,6 +33,7 @@ export class BooksController {
     };
   }
 
+  @UseGuards(FirebaseAuthGuard, UserAuthGuard)
   @Get('books/current')
   @ApiOperation({ summary: 'Get Current Reading List of all books' })
   @ApiResponse({ status: 200, description: 'Get all books successful.' })
@@ -44,6 +46,7 @@ export class BooksController {
     };
   }
 
+  @UseGuards(FirebaseAuthGuard, UserAuthGuard)
   @Get('books/want-to')
   @ApiOperation({ summary: 'Get Want to Read List of all books' })
   @ApiResponse({ status: 200, description: 'Get all books successful.' })
@@ -56,6 +59,7 @@ export class BooksController {
     };
   }
 
+  @UseGuards(FirebaseAuthGuard, UserAuthGuard)
   @Get('books/read')
   @ApiOperation({ summary: 'Get Read List of all books' })
   @ApiResponse({ status: 200, description: 'Get all books successful.' })
@@ -67,6 +71,7 @@ export class BooksController {
     };
   }
 
+  @UseGuards(FirebaseAuthGuard, UserAuthGuard)
   @Patch('books/:id/record/update')
   @ApiOperation({ summary: 'Update Status of the Book' })
   @ApiResponse({ status: 200, description: 'Update status successful.' })
@@ -86,6 +91,7 @@ export class BooksController {
     };
   }
 
+  @UseGuards(FirebaseAuthGuard, UserAuthGuard)
   @Post('books/:id/record/add')
   @ApiOperation({ summary: 'Add Book to my record' })
   @ApiResponse({ status: 200, description: 'Add book successful.' })
@@ -120,6 +126,7 @@ export class BooksController {
     };
   }
 
+  @UseGuards(FirebaseAuthGuard, UserAuthGuard)
   @Post('books/:id/comment')
   @ApiOperation({ summary: 'Post Comment on the Book' })
   @ApiResponse({ status: 200, description: 'Post comment successful.' })
