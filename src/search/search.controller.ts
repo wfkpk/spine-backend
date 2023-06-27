@@ -8,7 +8,7 @@ export class SearchController {
   @Get()
   async search(@Query('q') q: string): Promise<Response> {
     return {
-      data: await this.searchService.searchAndSaveBooks(q),
+      data: await this.searchService.search(q),
     };
   }
 

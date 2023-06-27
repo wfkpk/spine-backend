@@ -14,15 +14,15 @@ export class SearchService {
     });
   }
 
-  // async search(query: string) {
-  //   const index = await this._client.getIndex('books');
-  //   const search = await index.search(query, {
-  //     limit: 2,
-  //     attributesToHighlight: ['title', 'description'],
-  //   });
+  async search(query: string) {
+    const index = await this._client.getIndex('books');
+    const search = await index.search(query, {
+      limit: 2,
+      attributesToHighlight: ['title', 'description'],
+    });
 
-  //   return search;
-  // }
+    return search;
+  }
 
   async addDocuments() {
     const index = await this._client.index('books');
