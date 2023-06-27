@@ -11,4 +11,11 @@ export class SearchController {
       data: await this.searchService.searchAndSaveBooks(q),
     };
   }
+
+  @Get('me')
+  async fun(@Query('q') q: string) {
+    return {
+      data: await this.searchService.fun(q),
+    };
+  }
 }

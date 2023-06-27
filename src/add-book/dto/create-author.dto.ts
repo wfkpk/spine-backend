@@ -15,5 +15,5 @@ export class CreateAuthorDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  gooReadsId: string;
+  gooReadsId: number;
 }

@@ -52,5 +52,5 @@ export class CreateBookDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsInt()
-  authorId: number;
+  authorId: string;
 }

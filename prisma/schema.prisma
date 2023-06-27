@@ -3,35 +3,38 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Book {
   id            String  @id @default(uuid())
   title         String
   description   String?
-  imageUrl      String
-  bookUrl       String
+  imageUrl      String?
+  bookUrl       String?
   bookTitleBare String
-  numPages      Int
-  avgRating     String
+  numPages      Int?
+  avgRating     String?
   ratingsCount  Int
   kcrPreviewUrl String?
   goodReadsId   String  @unique
 
   author   Author    @relation(fields: [authorId], references: [id])
-  authorId Int
+  authorId String
   comment  Comment[]
   Record   Record[]
   Notes    Notes[]
+
+  @@index([authorId])
 }
 
 model Author {
-  id          Int    @id @default(autoincrement())
-  goodReadsId String @unique
-  name        String
-  profileUrl  String
+  id          String  @id @default(uuid())
+  goodReadsId Int     @unique
+  name        String?
+  profileUrl  String?
   books       Book[]
 }
 
@@ -45,6 +48,9 @@ model Comment {
   userId String
   book   Book   @relation(fields: [bookId], references: [id])
   bookId String
+
+  @@index([userId])
+  @@index([bookId])
 }
 
 model Record {
@@ -59,6 +65,9 @@ model Record {
   userId String
   book   Book   @relation(fields: [bookId], references: [id])
   bookId String
+
+  @@index([userId])
+  @@index([bookId])
 }
 
 model Notes {
@@ -70,6 +79,9 @@ model Notes {
   userId    String
   book      Book     @relation(fields: [bookId], references: [id])
   bookId    String
+
+  @@index([userId])
+  @@index([bookId])
 }
 
 model User {
