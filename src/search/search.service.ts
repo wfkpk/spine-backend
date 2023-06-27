@@ -32,57 +32,6 @@ export class SearchService {
     return response;
   }
 
-  // async search(query) {
-  //   const apiUrl = `https://www.goodreads.com/book/auto_complete?format=json&q=${encodeURIComponent(
-  //     query,
-  //   )}`;
-
-  //   try {
-  //     const response = await axios.get(apiUrl);
-  //     const booksData = response.data;
-
-  //     await this.saveBooksDataIn(booksData);
-
-  //     return booksData;
-  //   } catch (error) {
-  //     console.error('Error calling the API:', error);
-  //     throw error;
-  //   }
-  // }
-  // async saveBooksDataIn(data) {
-  //   const books = data.map((bookData) => {
-  //     const image_url_parts = bookData.imageUrl.split('.');
-  //     const image_url = image_url_parts.slice(0, -2).join('.') + '.jpg';
-
-  //     return {
-  //       id: bookData.bookId,
-  //       title: bookData.title,
-  //       description: bookData.description?.html || null,
-  //       imageUrl: image_url,
-  //       bookUrl: `https://www.goodreads.com${bookData.bookUrl}`,
-  //       bookTitleBare: bookData.bookTitleBare,
-  //       numPages: bookData.numPages || null,
-  //       avgRating: bookData.avgRating,
-  //       ratingsCount: bookData.ratingsCount,
-  //       kcrPreviewUrl: bookData.kcrPreviewUrl || null,
-  //       goodReadsId: bookData.bookId,
-  //       author: {
-  //         connectOrCreate: {
-  //           where: { id: bookData.author.id },
-  //           create: {
-  //             id: bookData.author.id,
-  //             name: bookData.author.name,
-  //             isGoodreadsAuthor: bookData.author.isGoodreadsAuthor,
-  //             profileUrl: bookData.author.profileUrl,
-  //             worksListUrl: bookData.author.worksListUrl,
-  //           },
-  //         },
-  //       },
-  //     };
-  //   });
-
-  //   await this.prisma.book.createMany({ data: books, skipDuplicates: true });
-  // }
   async searchAndSaveBooks(query: string) {
     if (query.length < 3) {
       throw new BadRequestException();
