@@ -12,8 +12,8 @@
 
 I wanted to keep track of my books and there not any books tracker with good ui and i build this backend.Now I am sending Books Json data to server and then changing status from want-to-read to read and searching books with my localhosted instance of meilisearch image on docker.
 
-feature list:-
-
+### feature list:-
+```bash
 ✅authentication
 
 ✅-add books in the 3 main list
@@ -29,9 +29,12 @@ feature list:-
 ✅add multiple comment on thesingle book
 
 ✅added digital ocean space for storing files (more details upload service).
+```
 
-### Tech Stack: MySQL, NestJS, Prisma, Meilisearch, S3 bucket
+### Tech Stack-
 
+MySQL, NestJS, Prisma, Meilisearch, S3 bucket
+---
 ### Swagger API endpoint preview
 ![image](https://github.com/wfkpk/spine-backend/assets/89706786/87da94a9-a959-4ed2-9519-d8a799bd456f)
 
