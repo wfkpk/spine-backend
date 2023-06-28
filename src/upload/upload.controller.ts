@@ -14,38 +14,38 @@ import { UploadService } from './upload.service';
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
-  @Post('/upload')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      fileFilter: (req, file, cb) => {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-          return cb(
-            new BadRequestException('Only image files are allowed!'),
-            false,
-          );
-        }
+  // @Post('/upload')
+  // @UseInterceptors(
+  //   FileInterceptor('file', {
+  //     fileFilter: (req, file, cb) => {
+  //       if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+  //         return cb(
+  //           new BadRequestException('Only image files are allowed!'),
+  //           false,
+  //         );
+  //       }
 
-        cb(null, true);
-      },
-    }),
-  )
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
-  async uploadImage(
-    @UploadedFile() file: Express.Multer.File,
-  ): Promise<string> {
-    return this.uploadService.uploadFile(file);
-  }
+  //       cb(null, true);
+  //     },
+  //   }),
+  // )
+  // @ApiConsumes('multipart/form-data')
+  // @ApiBody({
+  //   schema: {
+  //     type: 'object',
+  //     properties: {
+  //       file: {
+  //         type: 'string',
+  //         format: 'binary',
+  //       },
+  //     },
+  //   },
+  // })
+  // async uploadImage(
+  //   @UploadedFile() file: Express.Multer.File,
+  // ): Promise<string> {
+  //   return this.uploadService.uploadFile(file);
+  // }
 
   //THINKING OF HOW CAN I HANDLE MULTIPLE FILE UPLOAD FOR EVERY POST STILL COUDNT FIGURE OUT LETS SEE
 
