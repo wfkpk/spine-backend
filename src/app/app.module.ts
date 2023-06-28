@@ -5,9 +5,10 @@ import { BooksModule } from 'src/books/books.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { SearchModule } from 'src/search/search.module';
 import { UserModule } from 'src/user/user.module';
+import { UploadModule } from 'src/upload/upload.module';
 
 @Module({
-  imports: [UserModule, PrismaModule, BooksModule, SearchModule],
+  imports: [UserModule, PrismaModule, BooksModule, SearchModule, UploadModule],
   controllers: [AppController],
   providers: [AppService],
 })

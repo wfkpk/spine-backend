@@ -8,10 +8,18 @@ datasource db {
   relationMode = "prisma"
 }
 
+model Genre {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  books       Book[]
+}
+
 model Book {
-  id            String  @id @default(uuid())
+  id            String    @id @default(uuid())
   title         String
-  description   String?
+  description   Bytes?
   imageUrl      String?
   bookUrl       String?
   bookTitleBare String
@@ -19,22 +27,25 @@ model Book {
   avgRating     String?
   ratingsCount  Int
   kcrPreviewUrl String?
-  goodReadsId   String  @unique
-
-  author   Author    @relation(fields: [authorId], references: [id])
-  authorId String
-  comment  Comment[]
-  Record   Record[]
-  Notes    Notes[]
+  goodReadsId   String    @unique
+  genres        Genre[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  author        Author    @relation(fields: [authorId], references: [id])
+  authorId      String
+  comment       Comment[]
+  Record        Record[]
+  Notes         Notes[]
 
   @@index([authorId])
 }
 
 model Author {
-  id          String  @id @default(uuid())
-  goodReadsId Int     @unique
+  id          String   @id @default(uuid())
+  goodReadsId Int      @unique
   name        String?
   profileUrl  String?
+  createdAt   DateTime @default(now())
   books       Book[]
 }
 
@@ -102,21 +113,22 @@ model User {
   Notes   Notes[]
 }
 
-// model BookSuggest{
-//   id            String  @id @default(uuid())
-//   title         String
-//   description   String?
-//   imageUrl      String
-//   bookUrl       String
-//   numPages      Int
-//   kcrPreviewUrl String?
-//   bookId        String  @unique
-// }
-// model AuthorSuggest{
-//   id           Int @id @default(autoincrement())
-//   name         String
-//   profileUrl   String
-//   worksListUrl String
+// model EditRequest {
+//   id              String   @id @default(uuid())
+//   createdAt       DateTime @default(now())
+//   updatedAt       DateTime @updatedAt
+//   status          String   @default("PENDING")
+//   bookName        String
+//   bookDescription String
+//   authorName      String
+//   genreName       Json
+//   book            Book     @relation(fields: [bookId], references: [id])
+//   bookId          String
+//   user            User     @relation(fields: [userId], references: [id])
+//   userId          String
+
+//   @@index([userId])
+//   @@index([bookId])
 // }
 
 enum BookRecordStatus {

@@ -2,15 +2,19 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import MeiliSearch from 'meilisearch';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UploadService } from 'src/upload/upload.service';
 
 @Injectable()
 export class SearchService {
   private _client: MeiliSearch;
 
-  constructor(private readonly prisma: PrismaService) {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly uploadService: UploadService,
+  ) {
     this._client = new MeiliSearch({
       host: 'http://localhost:7700/',
-      apiKey: 'RQ6rUADUtL3Fs9yIQxG3MxCfkz3gSnysHyNXGSaG6Pg',
+      apiKey: 'S5IUgWOsJ7IQJJLF4vtXCNhz_pXpb_ZXXsiVV99YRiI',
     });
   }
 
@@ -18,18 +22,10 @@ export class SearchService {
     const index = await this._client.getIndex('books');
     const search = await index.search(query, {
       limit: 2,
-      attributesToHighlight: ['title', 'description'],
+      attributesToHighlight: ['title', 'auth'],
     });
 
     return search;
-  }
-
-  async addDocuments() {
-    const index = await this._client.index('books');
-    const documents = [];
-    const response = await index.addDocuments(documents);
-    console.log(response);
-    return response;
   }
 
   async searchAndSaveBooks(query: string) {
@@ -42,7 +38,6 @@ export class SearchService {
 
     let author;
     let documents;
-    console.log(apiUrl);
     try {
       const response = await axios.get(apiUrl);
       const booksData = response.data;
@@ -50,13 +45,24 @@ export class SearchService {
       if (booksData.length === 0) {
         return [];
       }
-
       const books = booksData.map(async (bookData) => {
         if (!bookData.author || !bookData.bookId || !bookData.title) {
           throw new Error('Invalid book data received from the API');
         }
         const image_url_parts = bookData.imageUrl.split('.');
         const image_url = image_url_parts.slice(0, -2).join('.') + '.jpg';
+        let cdnImageUrl;
+        const bookUnique = await this.prisma.book.findUnique({
+          where: { goodReadsId: bookData.bookId.toString() },
+        });
+        if (!bookUnique) {
+          try {
+            cdnImageUrl = await this.uploadService.uploadFileFromUrl(image_url);
+            console.log(cdnImageUrl);
+          } catch (error) {
+            console.error('Error uploading image:', error);
+          }
+        }
 
         let upsertRetried = false;
         while (true) {
@@ -88,8 +94,8 @@ export class SearchService {
         return {
           goodReadsId: bookData.bookId.toString(),
           title: bookData.title,
-          description: bookData.description?.html || null,
-          imageUrl: image_url,
+          description: null,
+          imageUrl: cdnImageUrl || null,
           bookUrl: `https://www.goodreads.com${bookData.bookUrl}`,
           bookTitleBare: bookData.bookTitleBare,
           numPages: bookData.numPages || null,
@@ -101,13 +107,11 @@ export class SearchService {
       });
 
       const createdBooks = await Promise.all(books);
-      console.log(createdBooks);
       const booksForIndex = await this.prisma.book.createMany({
         data: createdBooks,
         skipDuplicates: true,
       });
 
-      console.log(booksForIndex);
       documents = createdBooks.map((book) => {
         return {
           id: book.goodReadsId,
@@ -123,12 +127,10 @@ export class SearchService {
           authorName: author.name,
         };
       });
-      console.log(documents);
+      console.log(booksForIndex.count);
       if (booksForIndex.count != 0) {
-        const index = await this._client.index('ts-books');
-
-        const res = await index.addDocuments(documents);
-        console.log(res);
+        const index = await this._client.index('books');
+        await index.addDocuments(documents);
       }
     } catch (error) {
       console.error('Error calling the API:', error);
@@ -147,5 +149,11 @@ export class SearchService {
     });
 
     return search;
+  }
+
+  async deleteDocument() {
+    const index = await this._client.getIndex('books');
+    const res = await index.deleteAllDocuments();
+    console.log(res);
   }
 }

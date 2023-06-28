@@ -8,14 +8,21 @@ export class SearchController {
   @Get()
   async search(@Query('q') q: string): Promise<Response> {
     return {
-      data: await this.searchService.search(q),
+      data: await this.searchService.searchAndSaveBooks(q),
     };
   }
 
   @Get('me')
   async fun(@Query('q') q: string) {
     return {
-      data: await this.searchService.fun(q),
+      data: await this.searchService.search(q),
+    };
+  }
+
+  @Get('/doc/delete')
+  async deleteDoc() {
+    return {
+      data: await this.searchService.deleteDocument(),
     };
   }
 }
