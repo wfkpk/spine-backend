@@ -63,7 +63,6 @@ export class SearchService {
             console.error('Error uploading image:', error);
           }
         }
-
         let upsertRetried = false;
         while (true) {
           try {
@@ -151,6 +150,7 @@ export class SearchService {
     return search;
   }
 
+  //delete all documents in index books
   async deleteDocument() {
     const index = await this._client.getIndex('books');
     const res = await index.deleteAllDocuments();
