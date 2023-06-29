@@ -29,6 +29,8 @@ I wanted to keep track of my books and there not any books tracker with good ui 
 ✅add multiple comment on thesingle book
 
 ✅added digital ocean space for storing files (more details upload service).
+
+✅added rate limiting with nestjs/throttler
 ```
 
 ### Tech Stack-
