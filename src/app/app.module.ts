@@ -6,10 +6,27 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { SearchModule } from 'src/search/search.module';
 import { UserModule } from 'src/user/user.module';
 import { UploadModule } from 'src/upload/upload.module';
-
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 @Module({
-  imports: [UserModule, PrismaModule, BooksModule, SearchModule, UploadModule],
+  imports: [
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 5,
+    }),
+    UserModule,
+    PrismaModule,
+    BooksModule,
+    SearchModule,
+    UploadModule,
+  ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

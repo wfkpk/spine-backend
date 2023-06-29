@@ -1,6 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Response } from 'src/interface/response';
+import { SkipThrottle, ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller()
 export class AppController {
@@ -11,6 +12,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @SkipThrottle(true)
   @Get('/ping')
   getPing() {
     return {
@@ -40,6 +42,7 @@ export class AppController {
     };
   }
 
+  @UseGuards(ThrottlerGuard)
   @Get('/genre')
   async getGenre(): Promise<Response> {
     return {
