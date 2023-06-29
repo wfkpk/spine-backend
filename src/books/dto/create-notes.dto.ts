@@ -5,6 +5,6 @@ export class CreateNotesDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  @MaxLength(300)
+  @MaxLength(180)
   readonly notes: string;
 }

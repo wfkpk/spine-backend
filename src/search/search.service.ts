@@ -13,8 +13,8 @@ export class SearchService {
     private readonly uploadService: UploadService,
   ) {
     this._client = new MeiliSearch({
-      host: 'http://localhost:7700/',
-      apiKey: 'S5IUgWOsJ7IQJJLF4vtXCNhz_pXpb_ZXXsiVV99YRiI',
+      host: process.env.MEILISEARCH_HOST,
+      apiKey: process.env.MEILISEARCH_API_KEY,
     });
   }
 
@@ -58,7 +58,6 @@ export class SearchService {
         if (!bookUnique) {
           try {
             cdnImageUrl = await this.uploadService.uploadFileFromUrl(image_url);
-            console.log(cdnImageUrl);
           } catch (error) {
             console.error('Error uploading image:', error);
           }
@@ -78,8 +77,6 @@ export class SearchService {
             break;
           } catch (error) {
             if (error.code === 'P2002' && !upsertRetried) {
-              // Unique constraint violation occurred, retry the upsert operation
-              console.log('error');
               upsertRetried = true;
               continue;
             } else {
@@ -126,7 +123,6 @@ export class SearchService {
           authorName: author.name,
         };
       });
-      console.log(booksForIndex.count);
       if (booksForIndex.count != 0) {
         const index = await this._client.index('books');
         await index.addDocuments(documents);
@@ -150,10 +146,9 @@ export class SearchService {
     return search;
   }
 
-  //delete all documents in index books
-  async deleteDocument() {
-    const index = await this._client.getIndex('books');
-    const res = await index.deleteAllDocuments();
-    console.log(res);
-  }
+  // //delete all documents in index books
+  // async deleteDocument() {
+  //   const index = await this._client.getIndex('books');
+  //   const res = await index.deleteAllDocuments();
+  // }
 }

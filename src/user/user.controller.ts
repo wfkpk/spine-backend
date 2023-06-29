@@ -7,7 +7,7 @@ import { Post, Body, Headers, Request } from '@nestjs/common';
 import { Response } from 'src/interface/response';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-
+import { EditRequestDto } from './dto/edit-request.dto';
 @Controller('u')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -23,7 +23,6 @@ export class UserController {
   @Get()
   async getUser(@Request() req): Promise<Response> {
     const userId = req.headers['userId'];
-
     const user = await this.userService.getUser(userId);
     return {
       data: user,
@@ -63,6 +62,18 @@ export class UserController {
     const userId = req.headers['userId'];
     return {
       data: await this.userService.getNotes(userId),
+    };
+  }
+
+  @UseGuards()
+  @Post('/book-edit-request')
+  async bookEditRequest(
+    @Request() req: any,
+    @Body() editRequestDto: EditRequestDto,
+  ): Promise<Response> {
+    const userId = req.headers['userId'];
+    return {
+      data: await this.userService.bookEditRequest(editRequestDto, userId),
     };
   }
 }

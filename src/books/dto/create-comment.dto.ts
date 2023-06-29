@@ -5,7 +5,7 @@ export class CreateCommentDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  @MaxLength(500)
+  @MaxLength(180)
   @MinLength(1)
   readonly text: string;
 }

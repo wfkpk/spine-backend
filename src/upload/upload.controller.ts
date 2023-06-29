@@ -59,6 +59,5 @@ export class UploadController {
   //   },
   // })
   // async uploadPost(@UploadedFiles() files: Express.Multer.File[]) {
-  //   console.log(files);
   // }
 }

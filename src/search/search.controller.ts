@@ -12,17 +12,10 @@ export class SearchController {
     };
   }
 
-  @Get('me')
+  @Get('/elevate')
   async fun(@Query('q') q: string) {
     return {
       data: await this.searchService.search(q),
-    };
-  }
-
-  @Get('/doc/delete')
-  async deleteDoc() {
-    return {
-      data: await this.searchService.deleteDocument(),
     };
   }
 }

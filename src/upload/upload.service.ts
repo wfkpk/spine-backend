@@ -7,8 +7,6 @@ import axios from 'axios';
 export class UploadService {
   private s3: AWS.S3;
   constructor() {
-    console.log(process.env.ACCESS_KEY_ID);
-    console.log(process.env.SECRET_ACCESS_KEY);
     this.s3 = new AWS.S3({
       region: 'sgp1', // Replace with your Space's region code
       endpoint: 'https://sgp1.digitaloceanspaces.com', // Replace with your Space's endpoint
