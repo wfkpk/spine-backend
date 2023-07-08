@@ -90,9 +90,14 @@ export class BooksService {
   }
 
   async getBookById(bookId: string) {
+    const fromGoodReadsId = await this.prisma.book.findUnique({
+      where: {
+        goodReadsId: bookId,
+      },
+    });
     const book = await this.prisma.book.findUnique({
       where: {
-        id: bookId,
+        id: fromGoodReadsId.id,
       },
       select: {
         id: true,
@@ -132,12 +137,17 @@ export class BooksService {
     userId: string,
     createCommentDto: CreateCommentDto,
   ) {
+    const fromGoodReadsId = await this.prisma.book.findUnique({
+      where: {
+        goodReadsId: bookId,
+      },
+    });
     const comment = await this.prisma.comment.create({
       data: {
         text: createCommentDto.text,
         book: {
           connect: {
-            id: bookId,
+            id: fromGoodReadsId.id,
           },
         },
         user: {
@@ -304,9 +314,14 @@ export class BooksService {
     userId: string,
     createStatusDto: CreateStatusDto,
   ) {
+    const fromGoodReadsId = await this.prisma.book.findUnique({
+      where: {
+        goodReadsId: bookId,
+      },
+    });
     const bookCheck = await this.prisma.record.findFirst({
       where: {
-        bookId: bookId,
+        bookId: fromGoodReadsId.id,
         userId: userId,
       },
     });
@@ -318,7 +333,7 @@ export class BooksService {
       data: {
         book: {
           connect: {
-            id: bookId,
+            id: fromGoodReadsId.id,
           },
         },
         user: {

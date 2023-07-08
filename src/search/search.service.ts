@@ -58,6 +58,7 @@ export class SearchService {
         if (!bookUnique) {
           try {
             cdnImageUrl = await this.uploadService.uploadFileFromUrl(image_url);
+            console.log(cdnImageUrl);
           } catch (error) {
             console.error('Error uploading image:', error);
           }
@@ -91,6 +92,7 @@ export class SearchService {
           goodReadsId: bookData.bookId.toString(),
           title: bookData.title,
           description: null,
+          goodReadsImageUrl: image_url || null,
           imageUrl: cdnImageUrl || null,
           bookUrl: `https://www.goodreads.com${bookData.bookUrl}`,
           bookTitleBare: bookData.bookTitleBare,
@@ -107,13 +109,13 @@ export class SearchService {
         data: createdBooks,
         skipDuplicates: true,
       });
-
       documents = createdBooks.map((book) => {
         return {
           id: book.goodReadsId,
           title: book.title,
           description: book.description,
           imageUrl: book.imageUrl,
+          goodReadsImageUrl: book.goodReadsImageUrl,
           bookUrl: book.bookUrl,
           bookTitleBare: book.bookTitleBare,
           numPages: book.numPages,
@@ -150,5 +152,38 @@ export class SearchService {
   // async deleteDocument() {
   //   const index = await this._client.getIndex('books');
   //   const res = await index.deleteAllDocuments();
+  // }
+
+  // async searchBooks(query) {
+  //   if (query.length < 3) {
+  //     return [];
+  //   }
+  //   const apiUrl = `https://www.goodreads.com/book/auto_complete?format=json&q=${encodeURIComponent(
+  //     query,
+  //   )}`;
+
+  //   // Make a request to the Goodreads API and get the response
+  //   const response = await fetch(apiUrl);
+  //   const data = await response.json();
+
+  //   // Extract the relevant information from the response and create book objects
+  //   const books = data.map((book) => {
+  //     return {
+  //       id: book.bookId,
+  //       title: book.title,
+  //       description: book.description.html,
+  //       imageUrl: book.imageUrl,
+  //       goodReadsImageUrl: book.imageUrl,
+  //       bookUrl: `https://www.goodreads.com${book.bookUrl}`,
+  //       bookTitleBare: book.bookTitleBare,
+  //       numPages: book.numPages,
+  //       avgRating: book.avgRating,
+  //       ratingsCount: book.ratingsCount,
+  //       author: book.author.id,
+  //       authorName: book.author.name,
+  //     };
+  //   });
+
+  //   return books;
   // }
 }

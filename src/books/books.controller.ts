@@ -22,7 +22,6 @@ import { CreateStatusDto } from './dto/create-status.dto';
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
-  @UseGuards(FirebaseAuthGuard, UserAuthGuard)
   @Get('books/:id')
   @ApiOperation({ summary: 'Get Book by Id' })
   @ApiResponse({ status: 200, description: 'Get book successful.' })
