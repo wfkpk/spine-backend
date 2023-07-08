@@ -18,26 +18,27 @@ model Genre {
 }
 
 model Book {
-  id            String        @id @default(uuid())
-  title         String
-  description   Bytes?
-  imageUrl      String?
-  bookUrl       String?
-  bookTitleBare String
-  numPages      Int?
-  avgRating     String?
-  ratingsCount  Int
-  kcrPreviewUrl String?
-  goodReadsId   String        @unique
-  genres        Genre[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  author        Author        @relation(fields: [authorId], references: [id])
-  authorId      String
-  comment       Comment[]
-  Record        Record[]
-  Notes         Notes[]
-  EditRequest   EditRequest[]
+  id                String        @id @default(uuid())
+  title             String
+  description       Bytes?
+  imageUrl          String?
+  goodReadsImageUrl String?
+  bookUrl           String?
+  bookTitleBare     String
+  numPages          Int?
+  avgRating         String?
+  ratingsCount      Int
+  kcrPreviewUrl     String?
+  goodReadsId       String        @unique
+  genres            Genre[]
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  author            Author        @relation(fields: [authorId], references: [id])
+  authorId          String
+  comment           Comment[]
+  Record            Record[]
+  Notes             Notes[]
+  EditRequest       EditRequest[]
 
   @@index([authorId])
 }
