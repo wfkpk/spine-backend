@@ -32,12 +32,20 @@ export class UserAuthGuard {
         firebaseUid: firebaseUid,
       },
     });
-
-    if (!user) {
-      return false;
+    if (user) {
+      request.headers['userId'] = user.id;
+    } else {
+      const newUser = await this.prisma.user.create({
+        data: {
+          firebaseUid: firebaseUid,
+          email: firebaseUser.email,
+          name: firebaseUser.displayName,
+          avatar: firebaseUser?.photoURL,
+        },
+      });
+      request.headers['userId'] = newUser.id;
+      return true;
     }
-    request.headers['userId'] = user.id;
-
     return true;
   }
 }
