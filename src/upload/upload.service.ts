@@ -58,7 +58,6 @@ export class UploadService {
     return new Promise((resolve, reject) => {
       this.s3.putObject(params, (err) => {
         if (err) {
-          console.log(err);
           reject(err);
         }
         resolve(imageURL);

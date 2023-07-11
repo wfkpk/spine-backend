@@ -58,7 +58,6 @@ export class SearchService {
         if (!bookUnique) {
           try {
             cdnImageUrl = await this.uploadService.uploadFileFromUrl(image_url);
-            console.log(cdnImageUrl);
           } catch (error) {
             console.error('Error uploading image:', error);
           }

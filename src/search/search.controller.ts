@@ -15,7 +15,6 @@ export class SearchController {
 
   @Get('/elevate')
   async fun(@Query('q') q: string) {
-    console.log(q);
     return {
       data: await this.searchService.search(q),
     };

@@ -1,9 +1,8 @@
 import { Controller, Get, Patch, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UserAuthGuard } from 'src/auth/auth.guard';
 import { FirebaseAuthGuard } from 'src/auth/firebase-auth.guard';
-import { Post, Body, Headers, Request } from '@nestjs/common';
+import { Post, Body, Request } from '@nestjs/common';
 import { Response } from 'src/interface/response';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -13,13 +12,6 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(FirebaseAuthGuard, UserAuthGuard)
-  @Get('/test')
-  getHello() {
-    return {
-      data: 'hello',
-    };
-  }
-  @UseGuards(FirebaseAuthGuard, UserAuthGuard)
   @Get()
   async getUser(@Request() req): Promise<Response> {
     const userId = req.headers['userId'];
@@ -28,17 +20,17 @@ export class UserController {
       data: user,
     };
   }
-  @UseGuards(FirebaseAuthGuard)
-  @Post('/create')
-  async createUser(
-    @Headers('Authorization') authHeader: string,
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<Response> {
-    const authToken = authHeader.replace('Bearer ', '');
-    return {
-      data: await this.userService.createUser(createUserDto, authToken),
-    };
-  }
+  // @UseGuards(FirebaseAuthGuard)
+  // @Post('/create')
+  // async createUser(
+  //   @Headers('Authorization') authHeader: string,
+  //   @Body() createUserDto: CreateUserDto,
+  // ): Promise<Response> {
+  //   const authToken = authHeader.replace('Bearer ', '');
+  //   return {
+  //     data: await this.userService.createUser(createUserDto, authToken),
+  //   };
+  // }
 
   @UseGuards(FirebaseAuthGuard, UserAuthGuard)
   @Patch('/update')
