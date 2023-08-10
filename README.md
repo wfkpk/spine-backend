@@ -22,7 +22,6 @@ I wanted to keep track of my books and there not any books tracker with good ui 
 - [x] add multiple comment on thesingle book
 - [x] add digital ocean space for storing files (more details upload service).
 - [x] add rate limiting with nestjs/throttler
-- [ ] rate limitting with redis
 
 
 
